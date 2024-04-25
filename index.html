@@ -4,10 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Example</title>
+    <script
+src='//in.fw-cdn.com/30003745/2511.js'
+chat='true'>
+</script>
 </head>
 <body>
     <h1>Registration Form</h1>
-    <form action="/submit_form" method="post">
+    <form method="post">
         <label for="first_name">First Name:</label><br>
         <input type="text" id="first_name" name="first_name" required><br>
         
@@ -23,7 +27,25 @@
         <label for="company_name">Company Name:</label><br>
         <input type="text" id="company_name" name="company_name" required><br><br>
         
-        <input type="submit" value="Submit">
+        <input type="submit" value="Submit" onClick="identify()">
     </form>
+
+ <script>
+        function identify() {
+            var new_contact = {
+                "First name": document.getElementById("first_name").value,
+                "Last name": document.getElementById("last_name").value,
+                "Email": document.getElementById("email").value,
+                "Alternate contact number": document.getElementById("mobile").value,
+                "company": {
+                    "Name": document.getElementById("company_name").value
+                }
+            };
+            var identifier = document.getElementById("email").value; // Using email as identifier
+            fwcrm.identify(identifier, new_contact);
+            // You might need to handle the submission of the form here, e.g., redirecting to another page or displaying a success message
+        }
+    </script>
+    
 </body>
 </html>
