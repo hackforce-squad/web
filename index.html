@@ -37,9 +37,10 @@ chat='true'>
                 "Last name": document.getElementById("last_name").value,
                 "Email": document.getElementById("email").value,
                 "Alternate contact number": document.getElementById("mobile").value,
-                "company": {
-                    "Name": document.getElementById("company_name").value
-                }
+                "User Agent":"testing123909"
+                // "company": {
+                //     "Name": document.getElementById("company_name").value
+                // }
             };
             var identifier = document.getElementById("email").value; // Using email as identifier
             fwcrm.identify(identifier, new_contact);
