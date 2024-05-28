@@ -47,6 +47,18 @@ chat='true'>
             // You might need to handle the submission of the form here, e.g., redirecting to another page or displaying a success message
         }
     </script>
+
+    <script>
+window.fcSettings = {
+  onInit: function() {
+    window.fcWidget.on("widget:destroyed", function() {
+      console.log('After widget destroyed');
+      // Do some clean-up here 
+    });
+  }
+}
+</script>
+<script src='//fw-cdn.com/1*****7/2*****4.js' chat='true'></script>
     
 </body>
 </html>
