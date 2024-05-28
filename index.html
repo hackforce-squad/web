@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Example</title>
+        <script>
+window.fcSettings = {
+  onInit: function() {
+    window.fcWidget.on("widget:destroyed", function() {
+      console.log('After widget destroyed');
+      // Do some clean-up here 
+    });
+  }
+}
+</script>
     <script
 src='//in.fw-cdn.com/30003745/2511.js'
 chat='true'>
@@ -48,17 +58,6 @@ chat='true'>
         }
     </script>
 
-    <script>
-window.fcSettings = {
-  onInit: function() {
-    window.fcWidget.on("widget:destroyed", function() {
-      console.log('After widget destroyed');
-      // Do some clean-up here 
-    });
-  }
-}
-</script>
-<script src='//fw-cdn.com/1*****7/2*****4.js' chat='true'></script>
     
 </body>
 </html>
