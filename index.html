@@ -62,12 +62,12 @@ Form 2
         <label for="company_name">Company Name:</label><br>
         <input type="text" id="company_name_2" required><br><br>
         
-<input type="submit" onclick="identify()">
+<input type="submit" onclick="identify_call()">
 
     </form>
 
  <script>
-        function identify() {
+        function identify_call() {
             var new_contact = {
                 "First name": document.getElementById("first_name_2").value,
                 "Last name": document.getElementById("last_name_2").value,
@@ -83,9 +83,9 @@ Form 2
             // You might need to handle the submission of the form here, e.g., redirecting to another page or displaying a success message
         }
     </script>
-<script>
+<!-- <script>
     window.fcWidget.destroy();
-</script>
+</script> -->
 
     
 </body>
