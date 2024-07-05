@@ -39,9 +39,26 @@ window.fcSettings = {
 <button><span class="l7_2fn wixui-button__label">Send</span></button>
 
 
+    </form>
 
 
-
+        <form id="form_name">
+        <label for="first_name">First Name:</label><br>
+        <input type="text" id="first_name" required><br>
+        
+        <label for="last_name">Last Name:</label><br>
+        <input type="text" id="last_name" required><br>
+        
+        <label for="email">Email:</label><br>
+        <input type="email" id="email"required><br>
+        
+        <label for="mobile">Mobile:</label><br>
+        <input type="tel" id="mobile" required><br>
+        
+        <label for="company_name">Company Name:</label><br>
+        <input type="text" id="company_name" required><br><br>
+        
+<input type="submit" onclick="identify()">
 
     </form>
 
@@ -53,9 +70,9 @@ window.fcSettings = {
                 "Email": document.getElementById("email").value,
                 "Alternate contact number": document.getElementById("mobile").value,
                 "User Agent":"testing123909"
-                // "company": {
-                //     "Name": document.getElementById("company_name").value
-                // }
+                "company": {
+                    "Name": document.getElementById("company_name").value
+                }
             };
             var identifier = document.getElementById("email").value; // Using email as identifier
             fwcrm.identify(identifier, new_contact);
