@@ -44,19 +44,19 @@ window.fcSettings = {
 
         <form id="form_name">
         <label for="first_name">First Name:</label><br>
-        <input type="text" id="first_name" required><br>
+        <input type="text" id="first_name_2" required><br>
         
         <label for="last_name">Last Name:</label><br>
-        <input type="text" id="last_name" required><br>
+        <input type="text" id="last_name_2" required><br>
         
         <label for="email">Email:</label><br>
-        <input type="email" id="email"required><br>
+        <input type="email" id="email_2"required><br>
         
         <label for="mobile">Mobile:</label><br>
-        <input type="tel" id="mobile" required><br>
+        <input type="tel" id="mobile_2" required><br>
         
         <label for="company_name">Company Name:</label><br>
-        <input type="text" id="company_name" required><br><br>
+        <input type="text" id="company_name_2" required><br><br>
         
 <input type="submit" onclick="identify()">
 
@@ -65,16 +65,16 @@ window.fcSettings = {
  <script>
         function identify() {
             var new_contact = {
-                "First name": document.getElementById("first_name").value,
-                "Last name": document.getElementById("last_name").value,
-                "Email": document.getElementById("email").value,
-                "Alternate contact number": document.getElementById("mobile").value,
+                "First name": document.getElementById("first_name_2").value,
+                "Last name": document.getElementById("last_name_2").value,
+                "Email": document.getElementById("email_2").value,
+                "Alternate contact number": document.getElementById("mobile_2").value,
                 "User Agent":"testing123909",
                 "company": {
-                    "Name": document.getElementById("company_name").value
+                    "Name": document.getElementById("company_name_2").value
                 }
             };
-            var identifier = document.getElementById("email").value; // Using email as identifier
+            var identifier = document.getElementById("email_2").value; // Using email as identifier
             fwcrm.identify(identifier, new_contact);
             // You might need to handle the submission of the form here, e.g., redirecting to another page or displaying a success message
         }
