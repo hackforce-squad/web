@@ -101,16 +101,16 @@ Form 2
             var new_contact = {
                 "First name": document.getElementById("first_name_2").value,
                 "Last name": document.getElementById("last_name_2").value,
-                "Emails": document.getElementById("email_2").value,
+                "Email": document.getElementById("email_2").value,
                 "Alternate contact number": document.getElementById("mobile_2").value,
                 "User Agent":"testing123909",
-		"fs_update":false,
                 "company": {
-                    "Name": document.getElementById("company_name_2").value
+                    "Name": document.getElementById("company_name_2").value,
+		    "Website":"wwww.freshworks.com"
                 }
             };
             var identifier = document.getElementById("email_2").value; // Using email as identifier
-            freshsales.identify(identifier, new_contact);
+            fwcrm.identify(identifier, new_contact);
             // You might need to handle the submission of the form here, e.g., redirecting to another page or displaying a success message
 
             FM.trackCustomEvent("Added to cart", {
