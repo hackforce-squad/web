@@ -121,9 +121,8 @@ Form 2 - Includes Identify Call
 	
 	<script>  
 document.addEventListener("DOMContentLoaded", function () {
-    // Dynamically wait for the form to load if it isn't immediately available
-    const formSelector = "[id^='fs-webform-container_'] form"; // Generic selector for the form
-    const maxRetries = 10; // Number of retries
+    const formSelector = "[id^='fs-webform-container_'] form"; // General selector for the form
+    const maxRetries = 10; // Retry up to 10 times
     const retryInterval = 500; // Retry every 500ms
 
     let attempts = 0;
@@ -144,16 +143,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     findForm();
 
-    // Attach an event listener to capture data
+    // Debounce function to delay execution
+    function debounce(func, delay) {
+        let timer;
+        return function (...args) {
+            clearTimeout(timer);
+            timer = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    // Attach event listener to capture data
     function attachFormListener(form) {
-        form.addEventListener("input", function (event) {
+        form.addEventListener("input", debounce(function (event) {
             const target = event.target;
             if (target.name) {
                 const value = target.value;
                 setCookie(target.name, value, 1); // Store in cookies for 1 day
             }
-        });
-        console.log("Form listener attached.");
+        }, 500)); // Debounce delay set to 500ms
+
+        console.log("Form listener with debounce attached.");
     }
 
     // Set a cookie
@@ -165,6 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log(`Cookie set: ${name}=${value}`);
     }
 });
+
 	</script>
 	
 </body>
