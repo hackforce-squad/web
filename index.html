@@ -119,12 +119,19 @@ Form 2 - Includes Identify Call
 
 	<script src='https://tadashicorp-team1.myfreshworks.com/crm/sales/web_forms/b61b9219f175012ced445e93c68a49050cae0f718740c1abc17665d78caf6fdd/form.js' crossorigin='anonymous' id='fs_b61b9219f175012ced445e93c68a49050cae0f718740c1abc17665d78caf6fdd'></script>
 	<script>  
-	document.querySelector("#fs-webform-container_b61b9219f175012ced445e93c68a49050cae0f718740c1abc17665d78caf6fdd_1218 > div:nth-child(3) > div.fserv-container > form > div > div:nth-child(12) > button").onclick = "testing()"; 
-	</script>
-	<script>
-		function testing() = {
-			console.log("Function testing triggered.")
-		}
+	document.addEventListener("DOMContentLoaded", function() {
+    const button = document.querySelector("#fs-webform-container_b61b9219f175012ced445e93c68a49050cae0f718740c1abc17665d78caf6fdd_1218 > div:nth-child(3) > div.fserv-container > form > div > div:nth-child(12) > button");
+    
+    if (button) {
+        button.addEventListener("click", function(event) {
+            console.log("Button clicked!");
+            // Add your custom code here
+        });
+    } else {
+        console.error("Button not found. Please check the selector.");
+    }
+});
+
 	</script>
 	
 </body>
