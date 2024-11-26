@@ -118,25 +118,38 @@ Form 2 - Includes Identify Call
 	<img style="width:100, height:100" src="https://www.apple.com/v/home/takeover/o/images/overview/iphone-16-pro/iphone_16_pro_startframe__fjdwae8n0tua_large_2x.jpg"></img>
 
 	<script src='https://tadashicorp-team1.myfreshworks.com/crm/sales/web_forms/b61b9219f175012ced445e93c68a49050cae0f718740c1abc17665d78caf6fdd/form.js' crossorigin='anonymous' id='fs_b61b9219f175012ced445e93c68a49050cae0f718740c1abc17665d78caf6fdd'></script>
+	
 	<script>  
-document.addEventListener("DOMContentLoaded", function() {
-    // Use a more generic selector to target the button
-    const container = document.querySelector("[id^='fs-webform-container_']"); // Select container with dynamic ID
-    if (container) {
-        const button = container.querySelector("div:nth-child(3) > div.fserv-container > form > div > div:nth-child(12) > button");
-        if (button) {
-            button.addEventListener("click", function(event) {
-                console.log("Button clicked!");
-                // Add your custom code here
-            });
-        } else {
-            console.error("Button not found inside the container.");
-        }
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("[id^='fs-webform-container_'] form"); // General selector for the form
+
+    if (form) {
+        // Add an event listener to all input fields in the form
+	    console.log("Form found");
+        form.addEventListener("input", function (event) {
+            const target = event.target;
+		console.log("Target is ",target);
+            if (target.name) {
+                const value = target.value;
+		    console.log("Value is ", value);
+                setCookie(target.name, value, 1); // Store data in cookies with a 1-day expiration
+            }
+        });
+
+        console.log("Form listener added. Data will be stored in cookies.");
     } else {
-        console.error("Container not found. Please check the selector.");
+        console.error("Form not found. Please check the selector.");
+    }
+
+    // Function to set a cookie
+    function setCookie(name, value, days) {
+        const date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        const expires = "expires=" + date.toUTCString();
+        document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
+        console.log(`Cookie set: ${name}=${value}`);
     }
 });
-
 
 	</script>
 	
