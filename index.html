@@ -121,27 +121,42 @@ Form 2 - Includes Identify Call
 	
 	<script>  
 document.addEventListener("DOMContentLoaded", function () {
-    const form = document.querySelector("[id^='fs-webform-container_'] form"); // General selector for the form
+    // Dynamically wait for the form to load if it isn't immediately available
+    const formSelector = "[id^='fs-webform-container_'] form"; // Generic selector for the form
+    const maxRetries = 10; // Number of retries
+    const retryInterval = 500; // Retry every 500ms
 
-    if (form) {
-        // Add an event listener to all input fields in the form
-	    console.log("Form found");
-        form.addEventListener("input", function (event) {
-            const target = event.target;
-		console.log("Target is ",target);
-            if (target.name) {
-                const value = target.value;
-		    console.log("Value is ", value);
-                setCookie(target.name, value, 1); // Store data in cookies with a 1-day expiration
-            }
-        });
+    let attempts = 0;
 
-        console.log("Form listener added. Data will be stored in cookies.");
-    } else {
-        console.error("Form not found. Please check the selector.");
+    function findForm() {
+        const form = document.querySelector(formSelector);
+
+        if (form) {
+            console.log("Form found!");
+            attachFormListener(form);
+        } else if (attempts < maxRetries) {
+            attempts++;
+            setTimeout(findForm, retryInterval); // Retry finding the form
+        } else {
+            console.error("Form not found after multiple attempts. Please check the selector.");
+        }
     }
 
-    // Function to set a cookie
+    findForm();
+
+    // Attach an event listener to capture data
+    function attachFormListener(form) {
+        form.addEventListener("input", function (event) {
+            const target = event.target;
+            if (target.name) {
+                const value = target.value;
+                setCookie(target.name, value, 1); // Store in cookies for 1 day
+            }
+        });
+        console.log("Form listener attached.");
+    }
+
+    // Set a cookie
     function setCookie(name, value, days) {
         const date = new Date();
         date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
@@ -150,7 +165,6 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log(`Cookie set: ${name}=${value}`);
     }
 });
-
 	</script>
 	
 </body>
