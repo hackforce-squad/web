@@ -126,10 +126,11 @@ document.addEventListener("DOMContentLoaded", function () {
 		  console.log("Entered addEventListener for mobile field");
     // Replace 'mobileFieldId' with the actual ID or class of the mobile field in the form
     const mobileField = document.querySelector('input[name="contact[mobile_number]"]'); // Name attribute of that field
-    const form = mobileField.closest('form');
+    // const form = mobileField.closest('form');
 
-    if (mobileField && form) {
+    if (mobileField) {
       form.addEventListener('submit', function (event) {
+	      console.log("Found mobile field");
 	      
         const mobileNumber = mobileField.value.trim();
 	      console.log(`If condition accepted for trimmed ${mobileNumber}`);
