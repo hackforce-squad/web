@@ -196,12 +196,10 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!ukMobileRegex.test(mobileNumber)) {
         mobileField.setCustomValidity('Please enter a valid UK mobile number.');
         submitButton.disabled = true; // Disable the submit button
-        errorMessage.style.display = 'block'; // Show the error message
         console.log("Invalid mobile number entered:", mobileNumber);
       } else {
         mobileField.setCustomValidity(''); // Clear the error
         submitButton.disabled = false; // Enable the submit button
-        errorMessage.style.display = 'none'; // Hide the error message
         console.log("Valid mobile number:", mobileNumber);
       }
       mobileField.reportValidity(); // Show the validation message
@@ -220,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const errorMessage = document.createElement('div');
         errorMessage.textContent = 'Please enter a valid UK mobile number.';
         errorMessage.style.color = 'red';
-        errorMessage.style.display = 'none'; // Hide the message initially
+        errorMessage.style.display = 'none'; // Initially hide the error message
         form.appendChild(errorMessage); // Append error message to the form
 
         if (submitButton) {
@@ -229,15 +227,16 @@ document.addEventListener('DOMContentLoaded', function () {
           // Initial validation to disable the button if the field is empty
           if (!mobileField.value.trim()) {
             submitButton.disabled = true;
-            errorMessage.style.display = 'block'; // Show the error message if field is empty
           }
 
           form.addEventListener('submit', function (event) {
-            // Prevent form submission if mobile number is invalid
-            if (!mobileField.checkValidity()) {
+            // Only show error message if submit button is disabled
+            if (submitButton.disabled) {
+              errorMessage.style.display = 'block'; // Show the error message if button is disabled
+              event.preventDefault(); // Prevent form submission
               console.log("Form submission blocked due to invalid mobile number.");
-              event.preventDefault(); // Block the form submission
             } else {
+              errorMessage.style.display = 'none'; // Hide the error message if the form is valid
               console.log("Form submitted successfully.");
             }
           });
@@ -261,6 +260,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Check if the field is already present when the script runs
   setupMobileFieldValidation();
 });
+
 
 	</script>
 
