@@ -181,19 +181,19 @@ document.addEventListener("DOMContentLoaded", function () {
 	</script> -->
 
 	<script>
-		document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
   console.log("Script initialized, waiting for the mobile field...");
 
   // Function to validate the mobile number
   function validateMobileNumber(mobileField) {
     const ukMobileRegex = /^(\+44|0)7\d{9}$/;
 
-    // Check the validity when the user inputs or when the form is submitted
+    // Check the validity on input
     mobileField.addEventListener('input', function () {
       const mobileNumber = mobileField.value.trim();
 
       if (!ukMobileRegex.test(mobileNumber)) {
-        mobileField.setCustomValidity('Please enter a valid UK mobile number like +447989812871');
+        mobileField.setCustomValidity('Please enter a valid UK mobile number.');
         console.log("Invalid mobile number entered:", mobileNumber);
       } else {
         mobileField.setCustomValidity(''); // Clear the error
@@ -215,8 +215,10 @@ document.addEventListener("DOMContentLoaded", function () {
         form.addEventListener('submit', function (event) {
           if (!mobileField.checkValidity()) {
             console.log("Form submission blocked due to invalid mobile number.");
-            event.preventDefault(); // Block the form submission
             mobileField.reportValidity(); // Show the validation message
+            event.preventDefault(); // Block the form submission
+          } else {
+            console.log("Form submitted successfully.");
           }
         });
       }
@@ -238,6 +240,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Check if the field is already present when the script runs
   setupMobileFieldValidation();
 });
+
 
 
 </script>
