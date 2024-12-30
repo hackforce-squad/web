@@ -233,6 +233,7 @@ document.addEventListener('DOMContentLoaded', function () {
           }
 
           form.addEventListener('submit', function (event) {
+            // Prevent form submission if mobile number is invalid
             if (!mobileField.checkValidity()) {
               console.log("Form submission blocked due to invalid mobile number.");
               event.preventDefault(); // Block the form submission
