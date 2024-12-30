@@ -122,6 +122,32 @@ Form 2 - Includes Identify Call
 	<script src='https://tadashicorp-team1.myfreshworks.com/crm/sales/web_forms/988b195877fee067ac4f2369ed10ef0771071bbc5b80641685022db6f8b0c94a/form.js' crossorigin='anonymous' id='fs_988b195877fee067ac4f2369ed10ef0771071bbc5b80641685022db6f8b0c94a'></script>
 	<script>  
 document.addEventListener("DOMContentLoaded", function () {
+	// Mobile validation code
+		  console.log("Entered addEventListener for mobile field");
+    // Replace 'mobileFieldId' with the actual ID or class of the mobile field in the form
+    const mobileField = document.querySelector('input[name="contact[mobile_number]"]'); // Name attribute of that field
+    const form = mobileField.closest('form');
+
+    if (mobileField && form) {
+      form.addEventListener('submit', function (event) {
+	      
+        const mobileNumber = mobileField.value.trim();
+	      console.log(`If condition accepted for trimmed ${mobileNumber}`);
+
+        // UK Mobile number regex: Starts with +44 or 0, followed by 7 and 9 more digits
+        const ukMobileRegex = /^(\+44|0)7\d{9}$/;
+
+        if (!ukMobileRegex.test(mobileNumber)) {
+          alert('Please enter a valid UK mobile number.');
+		console.log("Error - Please enter a valid UK mobile number.");
+          event.preventDefault(); // Prevent the form from submitting
+        }
+      });
+    }
+  });
+
+
+	// Cookie code
     const formSelector = "[id^='fs-webform-container_'] form"; // General selector for the form
     const maxRetries = 10; // Retry up to 10 times
     const retryInterval = 500; // Retry every 500ms
@@ -178,7 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	</script>
 
-	<script>
+<!-- 	<script>
   document.addEventListener('DOMContentLoaded', function () {
 	  console.log("Entered addEventListener for mobile field");
     // Replace 'mobileFieldId' with the actual ID or class of the mobile field in the form
@@ -202,7 +228,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
   });
-</script>
+</script> -->
 
 	
 </body>
