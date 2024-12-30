@@ -184,15 +184,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.addEventListener('DOMContentLoaded', function () {
   console.log("Script initialized, waiting for the mobile field...");
-
   // Function to validate the mobile number
-  function validateMobileNumber(mobileField, submitButton, errorMessage) {
+  function validateMobileNumber(mobileField, submitButton) {
     const ukMobileRegex = /^(\+44|0)7\d{9}$/;
-
     // Check the validity on input
     mobileField.addEventListener('input', function () {
       const mobileNumber = mobileField.value.trim();
-
       if (!ukMobileRegex.test(mobileNumber)) {
         mobileField.setCustomValidity('Please enter a valid UK mobile number.');
         submitButton.disabled = true; // Disable the submit button
@@ -205,39 +202,25 @@ document.addEventListener('DOMContentLoaded', function () {
       mobileField.reportValidity(); // Show the validation message
     });
   }
-
   // Function to find the mobile field and attach validation
   function setupMobileFieldValidation() {
     const mobileField = document.querySelector('input[name="contact[mobile_number]"]');
     if (mobileField) {
       console.log("Mobile field found:", mobileField);
-
       const form = mobileField.closest('form');
       if (form) {
         const submitButton = form.querySelector('button[type="submit"], input[type="submit"]');
-        const errorMessage = document.createElement('div');
-        errorMessage.textContent = 'Please enter a valid UK mobile number.';
-        errorMessage.style.color = 'red';
-        errorMessage.style.display = 'none'; // Initially hide the error message
-        form.appendChild(errorMessage); // Append error message to the form
-
         if (submitButton) {
-          validateMobileNumber(mobileField, submitButton, errorMessage);
-
+          validateMobileNumber(mobileField, submitButton);
           // Initial validation to disable the button if the field is empty
           if (!mobileField.value.trim()) {
             submitButton.disabled = true;
           }
-
           form.addEventListener('submit', function (event) {
-            // Check if submit button was clicked and is disabled (invalid number)
-            if (submitButton.disabled) {
-              // Show the error message only if the button is disabled and was clicked
-              errorMessage.style.display = 'block'; // Show the error message if button is disabled
-              event.preventDefault(); // Prevent form submission
+            if (!mobileField.checkValidity()) {
               console.log("Form submission blocked due to invalid mobile number.");
+              event.preventDefault(); // Block the form submission
             } else {
-              errorMessage.style.display = 'none'; // Hide the error message if the form is valid
               console.log("Form submitted successfully.");
             }
           });
@@ -247,22 +230,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     return false;
   }
-
   // Use MutationObserver to detect changes in the DOM
   const observer = new MutationObserver(() => {
     if (setupMobileFieldValidation()) {
       observer.disconnect(); // Stop observing once the field is found
     }
   });
-
   // Start observing the DOM
   observer.observe(document.body, { childList: true, subtree: true });
-
   // Check if the field is already present when the script runs
   setupMobileFieldValidation();
 });
-
-
 
 	</script>
 
