@@ -181,32 +181,45 @@ document.addEventListener("DOMContentLoaded", function () {
 	</script> -->
 
 	<script>
-document.addEventListener('DOMContentLoaded', function () {
+		document.addEventListener('DOMContentLoaded', function () {
   console.log("Script initialized, waiting for the mobile field...");
 
   // Function to validate the mobile number
   function validateMobileNumber(mobileField) {
+    const ukMobileRegex = /^(\+44|0)7\d{9}$/;
+
+    // Check the validity when the user inputs or when the form is submitted
     mobileField.addEventListener('input', function () {
       const mobileNumber = mobileField.value.trim();
-      const ukMobileRegex = /^(\+44|0)7\d{9}$/;
 
       if (!ukMobileRegex.test(mobileNumber)) {
-        mobileField.setCustomValidity('Please enter a valid UK mobile number.');
-        mobileField.reportValidity(); // Shows the error message
-        console.log("Invalid mobile number:", mobileNumber);
+        mobileField.setCustomValidity('Please enter a valid UK mobile number like +447989812871');
+        console.log("Invalid mobile number entered:", mobileNumber);
       } else {
-        mobileField.setCustomValidity(''); // Clears the error
+        mobileField.setCustomValidity(''); // Clear the error
         console.log("Valid mobile number:", mobileNumber);
       }
     });
   }
 
-  // Function to check if the field is available
-  function checkForMobileField() {
+  // Function to find the mobile field and attach validation
+  function setupMobileFieldValidation() {
     const mobileField = document.querySelector('input[name="contact[mobile_number]"]');
     if (mobileField) {
       console.log("Mobile field found:", mobileField);
       validateMobileNumber(mobileField);
+
+      const form = mobileField.closest('form');
+      if (form) {
+        // Prevent form submission if the mobile number is invalid
+        form.addEventListener('submit', function (event) {
+          if (!mobileField.checkValidity()) {
+            console.log("Form submission blocked due to invalid mobile number.");
+            event.preventDefault(); // Block the form submission
+            mobileField.reportValidity(); // Show the validation message
+          }
+        });
+      }
       return true;
     }
     return false;
@@ -214,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Use MutationObserver to detect changes in the DOM
   const observer = new MutationObserver(() => {
-    if (checkForMobileField()) {
+    if (setupMobileFieldValidation()) {
       observer.disconnect(); // Stop observing once the field is found
     }
   });
@@ -223,8 +236,9 @@ document.addEventListener('DOMContentLoaded', function () {
   observer.observe(document.body, { childList: true, subtree: true });
 
   // Check if the field is already present when the script runs
-  checkForMobileField();
+  setupMobileFieldValidation();
 });
+
 
 </script>
 
