@@ -181,11 +181,12 @@ document.addEventListener("DOMContentLoaded", function () {
 	</script> -->
 
 	<script>
-document.addEventListener('DOMContentLoaded', function () {
+
+		document.addEventListener('DOMContentLoaded', function () {
   console.log("Script initialized, waiting for the mobile field...");
 
   // Function to validate the mobile number
-  function validateMobileNumber(mobileField) {
+  function validateMobileNumber(mobileField, submitButton) {
     const ukMobileRegex = /^(\+44|0)7\d{9}$/;
 
     // Check the validity on input
@@ -194,11 +195,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (!ukMobileRegex.test(mobileNumber)) {
         mobileField.setCustomValidity('Please enter a valid UK mobile number.');
+        submitButton.disabled = true; // Disable the submit button
         console.log("Invalid mobile number entered:", mobileNumber);
       } else {
         mobileField.setCustomValidity(''); // Clear the error
+        submitButton.disabled = false; // Enable the submit button
         console.log("Valid mobile number:", mobileNumber);
       }
+      mobileField.reportValidity(); // Show the validation message
     });
   }
 
@@ -207,20 +211,27 @@ document.addEventListener('DOMContentLoaded', function () {
     const mobileField = document.querySelector('input[name="contact[mobile_number]"]');
     if (mobileField) {
       console.log("Mobile field found:", mobileField);
-      validateMobileNumber(mobileField);
 
       const form = mobileField.closest('form');
       if (form) {
-        // Prevent form submission if the mobile number is invalid
-        form.addEventListener('submit', function (event) {
-          if (!mobileField.checkValidity()) {
-            console.log("Form submission blocked due to invalid mobile number.");
-            mobileField.reportValidity(); // Show the validation message
-            event.preventDefault(); // Block the form submission
-          } else {
-            console.log("Form submitted successfully.");
+        const submitButton = form.querySelector('button[type="submit"], input[type="submit"]');
+        if (submitButton) {
+          validateMobileNumber(mobileField, submitButton);
+
+          // Initial validation to disable the button if the field is empty
+          if (!mobileField.value.trim()) {
+            submitButton.disabled = true;
           }
-        });
+
+          form.addEventListener('submit', function (event) {
+            if (!mobileField.checkValidity()) {
+              console.log("Form submission blocked due to invalid mobile number.");
+              event.preventDefault(); // Block the form submission
+            } else {
+              console.log("Form submitted successfully.");
+            }
+          });
+        }
       }
       return true;
     }
@@ -240,8 +251,6 @@ document.addEventListener('DOMContentLoaded', function () {
   // Check if the field is already present when the script runs
   setupMobileFieldValidation();
 });
-
-
 
 </script>
 
