@@ -120,32 +120,8 @@ Form 2 - Includes Identify Call
 <!-- 	<script src='https://tadashicorp-team1.myfreshworks.com/crm/sales/web_forms/b61b9219f175012ced445e93c68a49050cae0f718740c1abc17665d78caf6fdd/form.js' crossorigin='anonymous' id='fs_b61b9219f175012ced445e93c68a49050cae0f718740c1abc17665d78caf6fdd'></script>
 	 -->
 	<script src='https://tadashicorp-team1.myfreshworks.com/crm/sales/web_forms/988b195877fee067ac4f2369ed10ef0771071bbc5b80641685022db6f8b0c94a/form.js' crossorigin='anonymous' id='fs_988b195877fee067ac4f2369ed10ef0771071bbc5b80641685022db6f8b0c94a'></script>
-	<script>  
+<!-- 	<script>  
 document.addEventListener("DOMContentLoaded", function () {
-	// Mobile validation code
-		  console.log("Entered addEventListener for mobile field");
-    // Replace 'mobileFieldId' with the actual ID or class of the mobile field in the form
-    const mobileField = document.querySelector('input[name="contact[mobile_number]"]'); // Name attribute of that field
-    // const form = mobileField.closest('form');
-
-    if (mobileField) {
-      form.addEventListener('submit', function (event) {
-	      console.log("Found mobile field");
-	      
-        const mobileNumber = mobileField.value.trim();
-	      console.log(`If condition accepted for trimmed ${mobileNumber}`);
-
-        // UK Mobile number regex: Starts with +44 or 0, followed by 7 and 9 more digits
-        const ukMobileRegex = /^(\+44|0)7\d{9}$/;
-
-        if (!ukMobileRegex.test(mobileNumber)) {
-          alert('Please enter a valid UK mobile number.');
-		console.log("Error - Please enter a valid UK mobile number.");
-          event.preventDefault(); // Prevent the form from submitting
-        }
-      });
-    }
-
 
 	// Cookie code
     const formSelector = "[id^='fs-webform-container_'] form"; // General selector for the form
@@ -202,33 +178,55 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-	</script>
+	</script> -->
 
-<!-- 	<script>
-  document.addEventListener('DOMContentLoaded', function () {
-	  console.log("Entered addEventListener for mobile field");
-    // Replace 'mobileFieldId' with the actual ID or class of the mobile field in the form
-    const mobileField = document.querySelector('input[name="contact[mobile_number]"]'); // Name attribute of that field
-    const form = mobileField.closest('form');
+	<script>
+document.addEventListener('DOMContentLoaded', function () {
+  console.log("Script initialized, waiting for the mobile field...");
 
-    if (mobileField && form) {
-      form.addEventListener('submit', function (event) {
-	      
-        const mobileNumber = mobileField.value.trim();
-	      console.log(`If condition accepted for trimmed ${mobileNumber}`);
+  // Function to validate the mobile number
+  function validateMobileNumber(mobileField) {
+    mobileField.addEventListener('input', function () {
+      const mobileNumber = mobileField.value.trim();
+      const ukMobileRegex = /^(\+44|0)7\d{9}$/;
 
-        // UK Mobile number regex: Starts with +44 or 0, followed by 7 and 9 more digits
-        const ukMobileRegex = /^(\+44|0)7\d{9}$/;
+      if (!ukMobileRegex.test(mobileNumber)) {
+        mobileField.setCustomValidity('Please enter a valid UK mobile number.');
+        mobileField.reportValidity(); // Shows the error message
+        console.log("Invalid mobile number:", mobileNumber);
+      } else {
+        mobileField.setCustomValidity(''); // Clears the error
+        console.log("Valid mobile number:", mobileNumber);
+      }
+    });
+  }
 
-        if (!ukMobileRegex.test(mobileNumber)) {
-          alert('Please enter a valid UK mobile number.');
-		console.log("Error - Please enter a valid UK mobile number.");
-          event.preventDefault(); // Prevent the form from submitting
-        }
-      });
+  // Function to check if the field is available
+  function checkForMobileField() {
+    const mobileField = document.querySelector('input[name="contact[mobile_number]"]');
+    if (mobileField) {
+      console.log("Mobile field found:", mobileField);
+      validateMobileNumber(mobileField);
+      return true;
+    }
+    return false;
+  }
+
+  // Use MutationObserver to detect changes in the DOM
+  const observer = new MutationObserver(() => {
+    if (checkForMobileField()) {
+      observer.disconnect(); // Stop observing once the field is found
     }
   });
-</script> -->
+
+  // Start observing the DOM
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  // Check if the field is already present when the script runs
+  checkForMobileField();
+});
+
+</script>
 
 	
 </body>
