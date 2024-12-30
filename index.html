@@ -230,8 +230,9 @@ document.addEventListener('DOMContentLoaded', function () {
           }
 
           form.addEventListener('submit', function (event) {
-            // Only show error message if submit button is disabled
+            // Check if submit button was clicked and is disabled (invalid number)
             if (submitButton.disabled) {
+              // Show the error message only if the button is disabled and was clicked
               errorMessage.style.display = 'block'; // Show the error message if button is disabled
               event.preventDefault(); // Prevent form submission
               console.log("Form submission blocked due to invalid mobile number.");
@@ -260,6 +261,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Check if the field is already present when the script runs
   setupMobileFieldValidation();
 });
+
 
 
 	</script>
