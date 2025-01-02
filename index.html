@@ -270,6 +270,12 @@ document.addEventListener('DOMContentLoaded', function () {
         input.name = formFieldName;
         input.value = value;
         form.appendChild(input);
+
+	WebForm.$('<input>').attr({
+        type: 'hidden',
+        name: 'contact[input.name]',
+        value: input.value
+      }).appendTo('.fs-webform-container form');
       }
     }
   }
