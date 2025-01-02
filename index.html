@@ -179,8 +179,8 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 	</script> -->
-
-	<script>
+// Mobile validation
+<!-- 	<script>
 
 document.addEventListener('DOMContentLoaded', function () {
   console.log("Script initialized, waiting for the mobile field...");
@@ -242,8 +242,44 @@ document.addEventListener('DOMContentLoaded', function () {
   setupMobileFieldValidation();
 });
 
-	</script>
+	</script> -->
 
+//UTM Parameters in Classic webform
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+  // Map localStorage keys to form field names
+  const utmMapping = {
+    "_fm_oc": "contact[original_campaign]",
+    "_fm_om": "contact[original_medium]",
+    "_fm_os": "contact[original_source]",
+    "_fm_rc": "contact[recent_campaign]",
+    "_fm_rm": "contact[recent_medium]",
+    "_fm_rs": "contact[recent_source]"
+  };
+
+  const form = document.getElementById("webForm");
+
+  // Function to append hidden fields to the form
+  function appendUTMFields() {
+    for (const [storageKey, formFieldName] of Object.entries(utmMapping)) {
+      const value = window.localStorage.getItem(storageKey);
+      if (value) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = formFieldName;
+        input.value = value;
+        form.appendChild(input);
+      }
+    }
+  }
+
+  // Execute the function to add UTM fields
+  appendUTMFields();
+});
+
+	</script>
+	
 	
 </body>
 </html>
