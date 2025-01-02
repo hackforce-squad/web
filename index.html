@@ -179,9 +179,9 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 	</script> -->
-// Mobile validation
-<!-- 	<script>
-
+<!-- // Mobile validation
+<!-- 	<script> -->
+<!-- 
 document.addEventListener('DOMContentLoaded', function () {
   console.log("Script initialized, waiting for the mobile field...");
   // Function to validate the mobile number
@@ -241,47 +241,42 @@ document.addEventListener('DOMContentLoaded', function () {
   // Check if the field is already present when the script runs
   setupMobileFieldValidation();
 });
+ -->
+<!-- 	</script> -->
 
-	</script> -->
-
-//UTM Parameters in Classic webform
+<!-- //UTM Parameters in Classic webform -->
 
 	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-  // Map localStorage keys to form field names
-  const utmMapping = {
-    "_fm_oc": "contact[original_campaign]",
-    "_fm_om": "contact[original_medium]",
-    "_fm_os": "contact[original_source]",
-    "_fm_rc": "contact[recent_campaign]",
-    "_fm_rm": "contact[recent_medium]",
-    "_fm_rs": "contact[recent_source]"
-  };
+  var WebFormEvent = {
+    beforeSubmit: function () {
+      // Define mapping of localStorage keys to form field names
+      const utmMapping = {
+        "_fm_oc": "contact[first_campaign]",
+        "_fm_om": "contact[first_medium]",
+        "_fm_os": "contact[first_source]",
+        "_fm_rc": "contact[latest_campaign]",
+        "_fm_rm": "contact[latest_medium]",
+        "_fm_rs": "contact[latest_source]"
+      };
 
-  const form = document.getElementById("webForm");
+      // Function to get UTM values from localStorage
+      function getLocalStorageValue(key) {
+        return window.localStorage.getItem(key) || "";
+      }
 
-  // Function to append hidden fields to the form
-  function appendUTMFields() {
-    for (const [storageKey, formFieldName] of Object.entries(utmMapping)) {
-      const value = window.localStorage.getItem(storageKey);
-      if (value) {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = formFieldName;
-        input.value = value;
-
-	WebForm.$('<input>').attr({
-        type: 'hidden',
-        name: 'contact[input.name]',
-        value: input.value
-      }).appendTo('.fs-webform-container form');
+      // Append hidden fields dynamically
+      for (const [storageKey, formFieldName] of Object.entries(utmMapping)) {
+        const value = getLocalStorageValue(storageKey);
+        if (value) {
+          WebForm.$('<input>').attr({
+            type: 'hidden',
+            name: formFieldName,
+            value: value
+          }).appendTo('.fs-webform-container form');
+        }
       }
     }
-  }
-
-  // Execute the function to add UTM fields
-  appendUTMFields();
-});
+  };
 
 	</script>
 	
