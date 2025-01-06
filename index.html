@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 <!-- //UTM Parameters in Classic webform -->
 
-	<script>
+<!-- 	<script>
   var WebFormEvent = {
     beforeSubmit: function () {
       // Define mapping of localStorage keys to form field names
@@ -290,8 +290,61 @@ document.addEventListener('DOMContentLoaded', function () {
 
     display: none !important;
 }
-    </style>
+    </style> -->
 	
+
+<!-- Values from Cookies or URL
+	 -->
+
+	<script>
+  var WebFormEvent = {
+    beforeSubmit: function () {
+      
+      function getUTMParam(paramName) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(paramName) || "";
+      }
+
+      // Appending hidden input fields to the form
+      WebForm.$('<input>').attr({
+        type: 'hidden',
+        name: 'contact[custom_field][cf_lead_source]',
+        value: window.localStorage.getItem("_fm_ls") || getUTMParam('utm_source') || ''
+      }).appendTo('.fs-webform-container form');
+
+      WebForm.$('<input>').attr({
+        type: 'hidden',
+        name: 'contact[custom_field][cf_lead_medium]',
+        value: window.localStorage.getItem("_fm_lm") || getUTMParam('utm_medium') || ''
+      }).appendTo('.fs-webform-container form');
+
+      WebForm.$('<input>').attr({
+        type: 'hidden',
+        name: 'contact[custom_field][cf_lead_campaign]',
+        value: window.localStorage.getItem("_fm_lc") || getUTMParam('utm_campaign') || ''
+      }).appendTo('.fs-webform-container form');
+
+      WebForm.$('<input>').attr({
+        type: 'hidden',
+        name: 'contact[custom_field][cf_google_click_id]',
+        value: window.localStorage.getItem("_fm_gcid") || getUTMParam('gclid') || ''
+      }).appendTo('.fs-webform-container form');
+
+      WebForm.$('<input>').attr({
+        type: 'hidden',
+        name: 'contact[custom_field][cf_facebook_click_id]',
+        value: window.localStorage.getItem("_fm_fbclid") || ''
+      }).appendTo('.fs-webform-container form');
+
+      WebForm.$('<input>').attr({
+        type: 'hidden',
+        name: 'contact[custom_field][cf_ga_client_id]',
+        value: window.localStorage.getItem("_fm_gaid") || ''
+      }).appendTo('.fs-webform-container form');
+    }
+  };
+</script>
+
 	
 </body>
 </html>
