@@ -295,6 +295,8 @@ document.addEventListener('DOMContentLoaded', function () {
 <!-- Styling for shadow box like file upload
  -->
 <script>
+  var WebFormEvent = {
+    beforeSubmit: function () {
 	// Select the shadow host
 const shadowHost = document.querySelector('fw-file-uploader-2');
 
@@ -312,6 +314,8 @@ style.textContent = `
 
 // Append the style element to the shadow root
 shadowRoot.appendChild(style);
+    }
+  }
 </script>
 
 <!-- Values from Cookies or URL
