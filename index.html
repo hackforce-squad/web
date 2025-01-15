@@ -289,11 +289,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
     display: none !important;
 }
-		    .file-uploader__body {
-    background-color: blue !important;
-}
+
     </style>
-	
+
+<!-- Styling for shadow box like file upload
+ -->
+<script>
+	// Select the shadow host
+const shadowHost = document.querySelector('fw-file-uploader-2');
+
+// Access the shadow root
+const shadowRoot = shadowHost.shadowRoot;
+
+// Create a style element
+const style = document.createElement('style');
+style.textContent = `
+  .file-uploader__body {
+    background-color: blue !important; /* Add your desired styles */
+
+  }
+`;
+
+// Append the style element to the shadow root
+shadowRoot.appendChild(style);
+</script>
 
 <!-- Values from Cookies or URL
 	 -->
