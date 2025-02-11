@@ -370,8 +370,38 @@ shadowRoot.appendChild(style);
   };
 </script> -->
 
-<script src='https://jplmedia-sales.myfreshworks.com/crm/sales/web_forms/3005907c0e932368a33e6ff847a2c420f5c8930d0fc3cde7ede9ad5bd5af7cae/form.js' crossorigin='anonymous' id='fs_3005907c0e932368a33e6ff847a2c420f5c8930d0fc3cde7ede9ad5bd5af7cae'></script>
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+    const formSelector = "[id^='fs-webform-container_'] form"; // General selector for the form
+    const maxRetries = 10; // Retry up to 10 times
+    const retryInterval = 500; // Retry every 500ms
+    let attempts = 0;
 
+    function findForm() {
+        const form = document.querySelector(formSelector);
+
+        if (form) {
+            console.log("Form found!");
+            addFormId(form);
+        } else if (attempts < maxRetries) {
+            attempts++;
+            setTimeout(findForm, retryInterval); // Retry finding the form
+        } else {
+            console.error("Form not found after multiple attempts. Please check the selector.");
+        }
+    }
+
+    function addFormId(form) {
+        if (!form.id) {
+            form.id = "detected-webform";
+            console.log("Form ID added:", form.id);
+        }
+    }
+
+    findForm();
+});
+
+</script>
 	
 </body>
 </html>
