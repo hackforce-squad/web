@@ -298,22 +298,29 @@ document.addEventListener('DOMContentLoaded', function () {
   var WebFormEvent = {
     beforeSubmit: function () {
 	// Select the shadow host
-const shadowHost = document.querySelector('fw-file-uploader-2');
+// const shadowHost = document.querySelector('fw-file-uploader-2');
 
-// Access the shadow root
-const shadowRoot = shadowHost.shadowRoot;
+// // Access the shadow root
+// const shadowRoot = shadowHost.shadowRoot;
 
-// Create a style element
-const style = document.createElement('style');
-style.textContent = `
-  .file-uploader__body {
-    background-color: blue !important; /* Add your desired styles */
+// // Create a style element
+// const style = document.createElement('style');
+// style.textContent = `
+//   .file-uploader__body {
+//     background-color: blue !important; /* Add your desired styles */
 
-  }
-`;
+//   }
+// `;
 
-// Append the style element to the shadow root
-shadowRoot.appendChild(style);
+// // Append the style element to the shadow root
+// shadowRoot.appendChild(style);
+
+// Today's date in Classic webform as hidden field
+	WebForm.$('<input>').attr({
+        type: 'hidden',
+        name: 'contact[custom_field][cf_appnt_date]',
+        value: new Date().toISOString().split('T')[0]
+      }).appendTo('.fs-webform-container form');
     }
   }
 </script>
