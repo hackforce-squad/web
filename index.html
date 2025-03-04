@@ -96,7 +96,14 @@ Form 2 - Includes Identify Call
 <input type="submit" onclick="identify_call()">
 
     </form>
-
+<script>
+console.log(document.getElementById("first_name_2").value);
+console.log(document.getElementById("last_name_2").value);
+console.log(document.getElementById("email_2").value);
+console.log(document.getElementById("mobile_2").value);
+console.log(document.getElementById("company_name_2").value);
+</script>
+	
 <script>
     function identify_call() {
         var new_contact = {
@@ -408,6 +415,11 @@ document.addEventListener('DOMContentLoaded', function () {
     findForm();
 });
 
+
+</script>
+
+	<script>  
+document.querySelector("copy the selector from the website button").type = "submit"; 
 </script>
 	
 </body>
