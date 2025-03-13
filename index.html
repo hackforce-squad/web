@@ -436,7 +436,8 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 <script>
-	    const formElement = document.querySelector(".fs-country-phone");
+setTimeout(() => {
+    const formElement = document.querySelector(".fs-country-phone");
 
     if (formElement?.shadowRoot) {
         const style = document.createElement("style");
@@ -450,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function () {
         formElement.shadowRoot.appendChild(style);
         console.log("Style applied to remove extra space.");
     }
-
+}, 2000);
 </script>
 
 <script type="text/javascript">
