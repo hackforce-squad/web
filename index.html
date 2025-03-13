@@ -488,37 +488,41 @@ setTimeout(() => {
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const formSelector = "[id^='fs-webform-container_'] form"; // General form selector
+    const formSelector = "[id^='fs-webform-container_'] form"; 
     let attempts = 0;
-    const maxRetries = 20;
+    const maxRetries = 50;
     const retryInterval = 300;
 
-    function applyShadowDomFix() {
+    function waitForShadowDom() {
         const formElement = document.querySelector(".fs-country-phone");
 
         if (formElement?.shadowRoot) {
-            const existingStyle = formElement.shadowRoot.querySelector("#hide-country-style");
-            
-            if (!existingStyle) {
-                console.log("✅ Applying fix inside Shadow DOM...");
-                const style = document.createElement("style");
-                style.id = "hide-country-style";
-                style.textContent = `
-                    ::part(fw-select-input-container) {
-                        display: none !important;
-                    }
-                `;
-                formElement.shadowRoot.appendChild(style);
-                console.log("🎯 Shadow DOM Fix Applied!");
-            }
+            applyShadowFix(formElement);
         } else {
-            console.warn("⚠️ Shadow DOM not available yet. Retrying...");
+            console.warn(`⚠️ Shadow DOM not available yet. Retrying... (${attempts}/${maxRetries})`);
             if (attempts < maxRetries) {
                 attempts++;
-                setTimeout(applyShadowDomFix, retryInterval);
+                setTimeout(waitForShadowDom, retryInterval);
             } else {
                 console.error("🚨 Shadow DOM fix failed after multiple attempts.");
             }
+        }
+    }
+
+    function applyShadowFix(formElement) {
+        const existingStyle = formElement.shadowRoot.querySelector("#hide-country-style");
+        
+        if (!existingStyle) {
+            console.log("✅ Applying fix inside Shadow DOM...");
+            const style = document.createElement("style");
+            style.id = "hide-country-style";
+            style.textContent = `
+                ::part(fw-select-input-container) {
+                    display: none !important;
+                }
+            `;
+            formElement.shadowRoot.appendChild(style);
+            console.log("🎯 Shadow DOM Fix Applied!");
         }
     }
 
@@ -531,10 +535,7 @@ document.addEventListener("DOMContentLoaded", function () {
             style.id = "custom-style";
             style.textContent = `
                 .fs-webform-container .fserv-container .fserv-label, 
-                .fs-webform-container .fserv-container button {
-                    margin-left: 10px !important;
-                }
-
+                .fs-webform-container .fserv-container button,
                 .fs-webform-container .fserv-input-text,
                 .fs-webform-container .fserv-container .select2-container .select2-selection--single, 
                 .fs-webform-container .fserv-container .select2-selection,
@@ -547,17 +548,19 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function monitorStyleChanges() {
-        const observer = new MutationObserver(() => {
-            console.warn("⚠️ Styles were modified! Reapplying...");
-            enforceStyles();
-            applyShadowDomFix();
+    function monitorDOMChanges() {
+        const observer = new MutationObserver((mutationsList) => {
+            for (const mutation of mutationsList) {
+                if (mutation.addedNodes.length > 0) {
+                    console.warn("⚠️ DOM Updated! Rechecking styles...");
+                    enforceStyles();
+                    waitForShadowDom();
+                }
+            }
         });
 
-        observer.observe(document.head, { childList: true, subtree: true });
         observer.observe(document.body, { childList: true, subtree: true });
-
-        console.log("🔍 Monitoring for style changes...");
+        console.log("🔍 Monitoring for DOM changes...");
     }
 
     function findForm() {
@@ -569,8 +572,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log("🆔 Form ID added:", form.id);
             }
             enforceStyles();
-            applyShadowDomFix();
-            monitorStyleChanges();
+            waitForShadowDom();
+            monitorDOMChanges();
         } else if (attempts < maxRetries) {
             attempts++;
             console.warn(`⏳ Attempt ${attempts}/${maxRetries}: Form not found, retrying...`);
@@ -579,19 +582,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     findForm();
-
-    setTimeout(() => {
-        console.log("⏳ Running final style check after delay...");
-        enforceStyles();
-        applyShadowDomFix();
-    }, 2500);
 });
 </script>
-
-
-
-
-
 	
 </body>
 </html>
