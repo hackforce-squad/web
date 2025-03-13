@@ -306,9 +306,9 @@ document.addEventListener('DOMContentLoaded', function () {
     			font-size: small !important;
 		    }
 
-		    .fs-country-phone::part(fw-select-input-container) {
+/* 		    .fs-country-phone::part(fw-select-input-container) {
     display: none !important;
-}
+} */
 /* .fs-country-phone::part(country-select-container) {
     margin-inline-end: 0 !important;
 	display: none 
@@ -443,6 +443,33 @@ document.addEventListener('DOMContentLoaded', function () {
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "qnili3q4xa");
 </script>
+
+
+<script>
+setTimeout(() => {
+    const formElement = document.querySelector(".fs-country-phone");
+
+    if (formElement?.shadowRoot) {
+        const style = document.createElement("style");
+        style.textContent = `
+            .country-container {
+                display: block !important; /* Change flex to block */
+                justify-content: start !important;
+            }
+
+            .country-container .country-select-container {
+                display: none !important; /* Hide country selector */
+                flex: none !important; /* Prevent space reservation */
+                width: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+        `;
+        formElement.shadowRoot.appendChild(style);
+        console.log("Extra space removed.");
+    }
+}, 2000);
+</script>	
 	
 </body>
 </html>
