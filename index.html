@@ -316,6 +316,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
     </style>
 
+<script>
+setTimeout(() => {
+    const formElement = document.querySelector(".fs-country-phone");
+
+    if (formElement?.shadowRoot) {
+        const style = document.createElement("style");
+        style.textContent = `
+            .country-container {
+                display: block !important; /* Change flex to block */
+                justify-content: start !important;
+            }
+
+            .country-container .country-select-container {
+                display: none !important; /* Hide country selector */
+                flex: none !important; /* Prevent space reservation */
+                width: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+        `;
+        formElement.shadowRoot.appendChild(style);
+        console.log("Extra space removed.");
+    }
+}, 2000);
+</script>	
+
 <!-- Styling for shadow box like file upload
  -->
 <script>
@@ -445,31 +471,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 
-<script>
-setTimeout(() => {
-    const formElement = document.querySelector(".fs-country-phone");
 
-    if (formElement?.shadowRoot) {
-        const style = document.createElement("style");
-        style.textContent = `
-            .country-container {
-                display: block !important; /* Change flex to block */
-                justify-content: start !important;
-            }
-
-            .country-container .country-select-container {
-                display: none !important; /* Hide country selector */
-                flex: none !important; /* Prevent space reservation */
-                width: 0 !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-        `;
-        formElement.shadowRoot.appendChild(style);
-        console.log("Extra space removed.");
-    }
-}, 2000);
-</script>	
 	
 </body>
 </html>
