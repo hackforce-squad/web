@@ -488,36 +488,43 @@ setTimeout(() => {
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    function hideCountryDropdown() {
-        const phoneInput = document.querySelector(".fs-country-phone");
-        
-        if (phoneInput && phoneInput.shadowRoot) {
-            const existingStyle = phoneInput.shadowRoot.querySelector("#force-hide-country");
-            
-            if (!existingStyle) {
-                console.log("✅ Injecting styles inside Shadow DOM...");
-                const style = document.createElement("style");
-                style.id = "force-hide-country";
-                style.textContent = `
-                    ::part(fw-select-input-container) {
-                        display: none !important;
-                    }
-                `;
-                phoneInput.shadowRoot.appendChild(style);
-                console.log("🎯 Country code dropdown hidden!");
+    function waitForShadowDOM(selector, callback, maxRetries = 50, interval = 300) {
+        let retries = 0;
+        function check() {
+            const element = document.querySelector(selector);
+            if (element && element.shadowRoot) {
+                console.log("✅ Shadow DOM detected! Injecting styles...");
+                callback(element.shadowRoot);
             } else {
-                console.log("ℹ️ Style already applied, skipping...");
+                retries++;
+                if (retries < maxRetries) {
+                    console.warn(`⚠️ Shadow DOM not available yet, retrying... (${retries}/${maxRetries})`);
+                    setTimeout(check, interval);
+                } else {
+                    console.error("❌ Shadow DOM not found after multiple attempts.");
+                }
             }
-        } else {
-            console.warn("⚠️ Shadow DOM not available yet, retrying...");
-            setTimeout(hideCountryDropdown, 300);
+        }
+        check();
+    }
+
+    function injectStylesIntoShadow(shadowRoot) {
+        const existingStyle = shadowRoot.querySelector("#force-hide-country");
+        if (!existingStyle) {
+            const style = document.createElement("style");
+            style.id = "force-hide-country";
+            style.textContent = `
+                ::part(fw-select-input-container) {
+                    display: none !important;
+                }
+            `;
+            shadowRoot.appendChild(style);
+            console.log("🎯 Country code dropdown hidden!");
         }
     }
 
     function applyGlobalStyles() {
-        console.log("🛠️ Applying global styles...");
         const styleTag = document.getElementById("custom-style");
-        
         if (!styleTag) {
             const style = document.createElement("style");
             style.id = "custom-style";
@@ -539,7 +546,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function monitorDOMChanges() {
         const observer = new MutationObserver(() => {
             console.warn("⚠️ DOM updated! Reapplying fixes...");
-            hideCountryDropdown();
+            waitForShadowDOM(".fs-country-phone", injectStylesIntoShadow);
             applyGlobalStyles();
         });
 
@@ -547,11 +554,12 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("🔍 Monitoring for DOM changes...");
     }
 
-    hideCountryDropdown();
+    waitForShadowDOM(".fs-country-phone", injectStylesIntoShadow);
     applyGlobalStyles();
     monitorDOMChanges();
 });
 </script>
+
 
 	
 </body>
