@@ -452,7 +452,7 @@ setTimeout(() => {
   };
 </script> -->
 
-<script>
+<!-- <script>
 	document.addEventListener("DOMContentLoaded", function () {
     const formSelector = "[id^='fs-webform-container_'] form"; // General selector for the form
     const maxRetries = 10; // Retry up to 10 times
@@ -484,72 +484,94 @@ setTimeout(() => {
 });
 
 
-</script>
+</script> -->
 
 <script>
-function hideCountryCode() {
-    const formElement = document.querySelector(".fs-country-phone");
-    console.log("Checking for form element...");
+document.addEventListener("DOMContentLoaded", function () {
+    const formSelector = "[id^='fs-webform-container_'] form"; // General selector for the form
+    const maxRetries = 10; // Retry up to 10 times
+    const retryInterval = 500; // Retry every 500ms
+    let attempts = 0;
 
-    if (!formElement) {
-        console.log("Form element not found yet. Retrying...");
-        setTimeout(hideCountryCode, 500); // Retry after 500ms
-        return;
-    }
+    function findForm() {
+        const form = document.querySelector(formSelector);
 
-    if (formElement.shadowRoot) {
-        const existingStyle = formElement.shadowRoot.querySelector("#hide-country-style");
-
-        if (!existingStyle) {
-            console.log("Injecting custom styles into shadow DOM...");
-            const style = document.createElement("style");
-            style.id = "hide-country-style";
-            style.textContent = `
-                .fs-country-phone::part(fw-select-input-container) {
-                    display: none !important;
-                }
-
-                .fs-webform-container .fserv-container .fserv-label,
-                .fs-webform-container .fserv-container button {
-                    margin-left: 10px !important;
-                }
-
-                .fs-webform-container .fserv-input-text {
-                    margin-left: 10px !important;
-                }
-
-                .fs-webform-container .fserv-container .fserv-field .select2-container .select2-selection--single,
-                .fs-webform-container .fserv-container .select2-selection {
-                    margin-left: 10px !important;
-                }
-
-                .fs-webform-container .fserv-container .fserv-input-checkbox {
-                    margin-left: 10px !important;
-                }
-            `;
-            formElement.shadowRoot.appendChild(style);
-            console.log("Styles applied successfully.");
+        if (form) {
+            console.log("✅ Form found!");
+            addFormId(form);
+            enforceStyles(); // Apply styles after form is found
+            monitorStyleChanges(); // Start monitoring for unwanted style changes
+        } else if (attempts < maxRetries) {
+            attempts++;
+            setTimeout(findForm, retryInterval); // Retry finding the form
         } else {
-            console.log("Styles already applied.");
+            console.error("❌ Form not found after multiple attempts. Check the selector.");
         }
-    } else {
-        console.log("Shadow DOM not ready yet. Retrying...");
-        setTimeout(hideCountryCode, 500); // Retry if shadow DOM isn't ready
     }
-}
 
-// Use MutationObserver to detect changes in Shadow DOM
-const observer = new MutationObserver(() => {
-    hideCountryCode();
+    function addFormId(form) {
+        if (!form.id) {
+            form.id = "detected-webform";
+            console.log("🆔 Form ID added:", form.id);
+        }
+    }
+
+    function enforceStyles() {
+        let styleTag = document.getElementById("enforce-custom-style");
+
+        if (!styleTag) {
+            styleTag = document.createElement("style");
+            styleTag.id = "enforce-custom-style";
+            document.head.appendChild(styleTag);
+        }
+
+        // Apply CSS to prevent Clarity or other scripts from overriding
+        styleTag.textContent = `
+            .fs-country-phone::part(fw-select-input-container) {
+                display: none !important;
+            }
+
+            .fs-webform-container .fserv-container .fserv-label, 
+            .fs-webform-container .fserv-container button {
+                margin-left: 10px !important;
+            }
+
+            .fs-webform-container .fserv-input-text {
+                margin-left: 10px !important;
+            }
+
+            .fs-webform-container .fserv-container .fserv-field .select2-container .select2-selection--single, 
+            .fs-webform-container .fserv-container .select2-selection {
+                margin-left: 10px !important;
+            }
+
+            .fs-webform-container .fserv-container .fserv-input-checkbox {
+                margin-left: 10px !important;
+            }
+        `;
+
+        console.log("🎨 Custom styles applied & enforced!");
+    }
+
+    function monitorStyleChanges() {
+        const observer = new MutationObserver(() => {
+            console.log("⚠️ Styles were modified! Reapplying...");
+            enforceStyles();
+        });
+
+        observer.observe(document.head, { childList: true, subtree: true });
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
+
+    findForm(); // Start finding the form on page load
+
+    // Extra safeguard: Apply styles again after 2 seconds to handle async scripts
+    setTimeout(() => {
+        enforceStyles();
+    }, 2000);
 });
-
-// Observe changes in the body to detect when the form loads
-observer.observe(document.body, { childList: true, subtree: true });
-
-// Initial execution
-hideCountryCode();
-
 </script>
+
 
 
 	
