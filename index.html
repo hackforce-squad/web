@@ -306,13 +306,13 @@ document.addEventListener('DOMContentLoaded', function () {
     			font-size: small !important;
 		    }
 
-		    .fs-country-phone::part(fw-select-input-container) {
+/* 		    .fs-country-phone::part(fw-select-input-container) {
     display: none !important;
 }
-.fs-country-phone::part(fw-select-input-container),
-.fs-country-phone .country-select-container {
+.fs-country-phone::part(country-select-container) {
     margin-inline-end: 0 !important;
-}
+	display: none 
+} */
 
     </style>
 
@@ -432,6 +432,24 @@ document.addEventListener('DOMContentLoaded', function () {
     findForm();
 });
 
+
+</script>
+
+<script>
+	    const formElement = document.querySelector(".fs-country-phone");
+
+    if (formElement?.shadowRoot) {
+        const style = document.createElement("style");
+        style.textContent = `
+            .country-container .country-select-container {
+                margin-inline-end: 0 !important;
+                flex: none !important;
+                display: none !important;
+            }
+        `;
+        formElement.shadowRoot.appendChild(style);
+        console.log("Style applied to remove extra space.");
+    }
 
 </script>
 
