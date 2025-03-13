@@ -320,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	display: none 
 } */
 
-		    		    .fs-country-phone::part(fw-select-input-container) {
+/* 		    		    .fs-country-phone::part(fw-select-input-container) {
     display: none !important;
 }
 
@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', function () {
 }
 .fs-webform-container .fserv-container .fserv-input-checkbox{
       margin-left:10px !important;
-}
+} */
 
     </style>
 
@@ -486,7 +486,45 @@ setTimeout(() => {
 
 </script>
 
+<script>
+	function hideCountryCode() {
+    const formElement = document.querySelector(".fs-country-phone");
+	console.log("Entered the hideCountryCode function");
+	console.log("formElement: ", formElement);
+    if (formElement?.shadowRoot) {
+        const existingStyle = formElement.shadowRoot.querySelector("#hide-country-style");
+        
+        if (!existingStyle) {
+		console.log("Entered existingStyle if block");
+            const style = document.createElement("style");
+            style.id = "hide-country-style";
+            style.textContent = `
+                .country-container .country-select-container {
+                    display: none !important;
+                    flex: none !important;
+                    width: 0 !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+            `;
+            formElement.shadowRoot.appendChild(style);
+            console.log("Extra space removed.");
+        }
+    }
+}
 
+// Use MutationObserver to detect changes in Shadow DOM
+const observer = new MutationObserver(() => {
+    hideCountryCode();
+});
+
+// Observe changes in the body to detect when the form loads
+observer.observe(document.body, { childList: true, subtree: true });
+
+// Initial check in case the form is already loaded
+hideCountryCode();
+
+</script>
 
 
 	
