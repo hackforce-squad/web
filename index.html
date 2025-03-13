@@ -499,13 +499,24 @@ setTimeout(() => {
             const style = document.createElement("style");
             style.id = "hide-country-style";
             style.textContent = `
-                .country-container .country-select-container {
-                    display: none !important;
-                    flex: none !important;
-                    width: 0 !important;
-                    margin: 0 !important;
-                    padding: 0 !important;
-                }
+				    		    .fs-country-phone::part(fw-select-input-container) {
+    display: none !important;
+}
+
+.fs-webform-container .fserv-container .fserv-label, .fs-webform-container .fserv-container button {
+  margin-left:10px !important;
+}
+
+
+.fs-webform-container .fserv-input-text{
+  margin-left:10px !important;
+}
+.fs-webform-container .fserv-container .fserv-field .select2-container .select2-selection--single, .fs-webform-container .fserv-container .select2-selection{
+    margin-left:10px !important;
+}
+.fs-webform-container .fserv-container .fserv-input-checkbox{
+      margin-left:10px !important;
+}
             `;
             formElement.shadowRoot.appendChild(style);
             console.log("Extra space removed.");
