@@ -487,40 +487,54 @@ setTimeout(() => {
 </script>
 
 <script>
-	function hideCountryCode() {
+function hideCountryCode() {
     const formElement = document.querySelector(".fs-country-phone");
-	console.log("Entered the hideCountryCode function");
-	console.log("formElement: ", formElement);
-    if (formElement?.shadowRoot) {
+    console.log("Checking for form element...");
+
+    if (!formElement) {
+        console.log("Form element not found yet. Retrying...");
+        setTimeout(hideCountryCode, 500); // Retry after 500ms
+        return;
+    }
+
+    if (formElement.shadowRoot) {
         const existingStyle = formElement.shadowRoot.querySelector("#hide-country-style");
-        
+
         if (!existingStyle) {
-		console.log("Entered existingStyle if block");
+            console.log("Injecting custom styles into shadow DOM...");
             const style = document.createElement("style");
             style.id = "hide-country-style";
             style.textContent = `
-				    		    .fs-country-phone::part(fw-select-input-container) {
-    display: none !important;
-}
+                .fs-country-phone::part(fw-select-input-container) {
+                    display: none !important;
+                }
 
-.fs-webform-container .fserv-container .fserv-label, .fs-webform-container .fserv-container button {
-  margin-left:10px !important;
-}
+                .fs-webform-container .fserv-container .fserv-label,
+                .fs-webform-container .fserv-container button {
+                    margin-left: 10px !important;
+                }
 
+                .fs-webform-container .fserv-input-text {
+                    margin-left: 10px !important;
+                }
 
-.fs-webform-container .fserv-input-text{
-  margin-left:10px !important;
-}
-.fs-webform-container .fserv-container .fserv-field .select2-container .select2-selection--single, .fs-webform-container .fserv-container .select2-selection{
-    margin-left:10px !important;
-}
-.fs-webform-container .fserv-container .fserv-input-checkbox{
-      margin-left:10px !important;
-}
+                .fs-webform-container .fserv-container .fserv-field .select2-container .select2-selection--single,
+                .fs-webform-container .fserv-container .select2-selection {
+                    margin-left: 10px !important;
+                }
+
+                .fs-webform-container .fserv-container .fserv-input-checkbox {
+                    margin-left: 10px !important;
+                }
             `;
             formElement.shadowRoot.appendChild(style);
-            console.log("Extra space removed.");
+            console.log("Styles applied successfully.");
+        } else {
+            console.log("Styles already applied.");
         }
+    } else {
+        console.log("Shadow DOM not ready yet. Retrying...");
+        setTimeout(hideCountryCode, 500); // Retry if shadow DOM isn't ready
     }
 }
 
@@ -532,7 +546,7 @@ const observer = new MutationObserver(() => {
 // Observe changes in the body to detect when the form loads
 observer.observe(document.body, { childList: true, subtree: true });
 
-// Initial check in case the form is already loaded
+// Initial execution
 hideCountryCode();
 
 </script>
