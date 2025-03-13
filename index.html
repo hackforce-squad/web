@@ -488,24 +488,28 @@ setTimeout(() => {
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+    console.log("🚀 Script Loaded: Starting form detection...");
+
     const formSelector = "[id^='fs-webform-container_'] form"; // General selector for the form
-    const maxRetries = 10; // Retry up to 10 times
-    const retryInterval = 500; // Retry every 500ms
+    const maxRetries = 20; // Retry up to 20 times
+    const retryInterval = 300; // Retry every 300ms
     let attempts = 0;
 
     function findForm() {
         const form = document.querySelector(formSelector);
 
         if (form) {
-            console.log("✅ Form found!");
+            console.log("✅ Form found!", form);
             addFormId(form);
-            enforceStyles(); // Apply styles after form is found
-            monitorStyleChanges(); // Start monitoring for unwanted style changes
+            enforceStyles(); // Apply styles
+            applyShadowDomFix(); // Fix inside Shadow DOM
+            monitorStyleChanges(); // Watch for unwanted changes
         } else if (attempts < maxRetries) {
             attempts++;
-            setTimeout(findForm, retryInterval); // Retry finding the form
+            console.warn(`⏳ Attempt ${attempts}/${maxRetries}: Form not found, retrying...`);
+            setTimeout(findForm, retryInterval); // Retry
         } else {
-            console.error("❌ Form not found after multiple attempts. Check the selector.");
+            console.error("❌ Form not found after multiple attempts. Please check the selector.");
         }
     }
 
@@ -525,7 +529,6 @@ document.addEventListener("DOMContentLoaded", function () {
             document.head.appendChild(styleTag);
         }
 
-        // Apply CSS to prevent Clarity or other scripts from overriding
         styleTag.textContent = `
             .fs-country-phone::part(fw-select-input-container) {
                 display: none !important;
@@ -553,24 +556,55 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("🎨 Custom styles applied & enforced!");
     }
 
+    function applyShadowDomFix() {
+        const formElement = document.querySelector(".fs-country-phone");
+        if (formElement?.shadowRoot) {
+            const existingStyle = formElement.shadowRoot.querySelector("#hide-country-style");
+            
+            if (!existingStyle) {
+                console.log("🌟 Applying fix inside Shadow DOM...");
+                const style = document.createElement("style");
+                style.id = "hide-country-style";
+                style.textContent = `
+                    ::part(fw-select-input-container) {
+                        display: none !important;
+                    }
+                `;
+                formElement.shadowRoot.appendChild(style);
+                console.log("✅ Shadow DOM Fix Applied!");
+            } else {
+                console.log("🔄 Shadow DOM Fix Already Exists!");
+            }
+        } else {
+            console.warn("⚠️ Shadow DOM not available yet. Retrying...");
+            setTimeout(applyShadowDomFix, 500);
+        }
+    }
+
     function monitorStyleChanges() {
         const observer = new MutationObserver(() => {
-            console.log("⚠️ Styles were modified! Reapplying...");
+            console.warn("⚠️ Styles were modified! Reapplying...");
             enforceStyles();
+            applyShadowDomFix();
         });
 
         observer.observe(document.head, { childList: true, subtree: true });
         observer.observe(document.body, { childList: true, subtree: true });
+
+        console.log("🔍 Monitoring for style changes...");
     }
 
     findForm(); // Start finding the form on page load
 
-    // Extra safeguard: Apply styles again after 2 seconds to handle async scripts
+    // Extra safeguard: Apply styles again after 2.5 seconds
     setTimeout(() => {
+        console.log("⏳ Running final style check after delay...");
         enforceStyles();
-    }, 2000);
+        applyShadowDomFix();
+    }, 2500);
 });
 </script>
+
 
 
 
