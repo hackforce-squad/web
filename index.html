@@ -488,77 +488,36 @@ setTimeout(() => {
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    function waitForShadowDOM(selector, callback, maxRetries = 50, interval = 300) {
-        let retries = 0;
-        function check() {
-            const element = document.querySelector(selector);
-            if (element && element.shadowRoot) {
-                console.log("✅ Shadow DOM detected! Injecting styles...");
-                callback(element.shadowRoot);
-            } else {
-                retries++;
-                if (retries < maxRetries) {
-                    console.warn(`⚠️ Shadow DOM not available yet, retrying... (${retries}/${maxRetries})`);
-                    setTimeout(check, interval);
-                } else {
-                    console.error("❌ Shadow DOM not found after multiple attempts.");
+    function hideCountryDropdown() {
+        console.log("🔍 Searching for country code dropdown...");
+
+        // Select all elements that may have shadow DOM
+        document.querySelectorAll("*").forEach(el => {
+            if (el.shadowRoot) {
+                const dropdown = el.shadowRoot.querySelector('[part="fw-select-input-container"]');
+                if (dropdown) {
+                    dropdown.style.display = "none";
+                    console.log("✅ Country code dropdown hidden!");
                 }
             }
-        }
-        check();
-    }
-
-    function injectStylesIntoShadow(shadowRoot) {
-        const existingStyle = shadowRoot.querySelector("#force-hide-country");
-        if (!existingStyle) {
-            const style = document.createElement("style");
-            style.id = "force-hide-country";
-            style.textContent = `
-                ::part(fw-select-input-container) {
-                    display: none !important;
-                }
-            `;
-            shadowRoot.appendChild(style);
-            console.log("🎯 Country code dropdown hidden!");
-        }
-    }
-
-    function applyGlobalStyles() {
-        const styleTag = document.getElementById("custom-style");
-        if (!styleTag) {
-            const style = document.createElement("style");
-            style.id = "custom-style";
-            style.textContent = `
-                .fs-webform-container .fserv-container .fserv-label, 
-                .fs-webform-container .fserv-container button,
-                .fs-webform-container .fserv-input-text,
-                .fs-webform-container .fserv-container .select2-container .select2-selection--single, 
-                .fs-webform-container .fserv-container .select2-selection,
-                .fs-webform-container .fserv-container .fserv-input-checkbox {
-                    margin-left: 10px !important;
-                }
-            `;
-            document.head.appendChild(style);
-            console.log("✅ Global styles applied!");
-        }
+        });
     }
 
     function monitorDOMChanges() {
         const observer = new MutationObserver(() => {
             console.warn("⚠️ DOM updated! Reapplying fixes...");
-            waitForShadowDOM(".fs-country-phone", injectStylesIntoShadow);
-            applyGlobalStyles();
+            hideCountryDropdown();
         });
 
         observer.observe(document.body, { childList: true, subtree: true });
         console.log("🔍 Monitoring for DOM changes...");
     }
 
-    waitForShadowDOM(".fs-country-phone", injectStylesIntoShadow);
-    applyGlobalStyles();
+    hideCountryDropdown();
     monitorDOMChanges();
 });
 </script>
+
 
 
 	
