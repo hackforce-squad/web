@@ -488,46 +488,34 @@ setTimeout(() => {
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const formSelector = "[id^='fs-webform-container_'] form"; 
-    let attempts = 0;
-    const maxRetries = 50;
-    const retryInterval = 300;
-
-    function waitForShadowDom() {
-        const formElement = document.querySelector(".fs-country-phone");
-
-        if (formElement?.shadowRoot) {
-            applyShadowFix(formElement);
-        } else {
-            console.warn(`⚠️ Shadow DOM not available yet. Retrying... (${attempts}/${maxRetries})`);
-            if (attempts < maxRetries) {
-                attempts++;
-                setTimeout(waitForShadowDom, retryInterval);
-            } else {
-                console.error("🚨 Shadow DOM fix failed after multiple attempts.");
-            }
-        }
-    }
-
-    function applyShadowFix(formElement) {
-        const existingStyle = formElement.shadowRoot.querySelector("#hide-country-style");
+    function hideCountryDropdown() {
+        const phoneInput = document.querySelector(".fs-country-phone");
         
-        if (!existingStyle) {
-            console.log("✅ Applying fix inside Shadow DOM...");
-            const style = document.createElement("style");
-            style.id = "hide-country-style";
-            style.textContent = `
-                .fs-country-phone::part(fw-select-input-container) {
-                    display: none !important;
-                }
-            `;
-            formElement.shadowRoot.appendChild(style);
-            console.log("🎯 Shadow DOM Fix Applied!");
+        if (phoneInput && phoneInput.shadowRoot) {
+            const existingStyle = phoneInput.shadowRoot.querySelector("#force-hide-country");
+            
+            if (!existingStyle) {
+                console.log("✅ Injecting styles inside Shadow DOM...");
+                const style = document.createElement("style");
+                style.id = "force-hide-country";
+                style.textContent = `
+                    ::part(fw-select-input-container) {
+                        display: none !important;
+                    }
+                `;
+                phoneInput.shadowRoot.appendChild(style);
+                console.log("🎯 Country code dropdown hidden!");
+            } else {
+                console.log("ℹ️ Style already applied, skipping...");
+            }
+        } else {
+            console.warn("⚠️ Shadow DOM not available yet, retrying...");
+            setTimeout(hideCountryDropdown, 300);
         }
     }
 
-    function enforceStyles() {
-        console.log("🛠️ Enforcing custom styles...");
+    function applyGlobalStyles() {
+        console.log("🛠️ Applying global styles...");
         const styleTag = document.getElementById("custom-style");
         
         if (!styleTag) {
@@ -544,46 +532,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             `;
             document.head.appendChild(style);
-            console.log("✅ Custom styles applied & enforced!");
+            console.log("✅ Global styles applied!");
         }
     }
 
     function monitorDOMChanges() {
-        const observer = new MutationObserver((mutationsList) => {
-            for (const mutation of mutationsList) {
-                if (mutation.addedNodes.length > 0) {
-                    console.warn("⚠️ DOM Updated! Rechecking styles...");
-                    enforceStyles();
-                    waitForShadowDom();
-                }
-            }
+        const observer = new MutationObserver(() => {
+            console.warn("⚠️ DOM updated! Reapplying fixes...");
+            hideCountryDropdown();
+            applyGlobalStyles();
         });
 
         observer.observe(document.body, { childList: true, subtree: true });
         console.log("🔍 Monitoring for DOM changes...");
     }
 
-    function findForm() {
-        const form = document.querySelector(formSelector);
-        if (form) {
-            console.log("✅ Form found!", form);
-            if (!form.id) {
-                form.id = "detected-webform";
-                console.log("🆔 Form ID added:", form.id);
-            }
-            enforceStyles();
-            waitForShadowDom();
-            monitorDOMChanges();
-        } else if (attempts < maxRetries) {
-            attempts++;
-            console.warn(`⏳ Attempt ${attempts}/${maxRetries}: Form not found, retrying...`);
-            setTimeout(findForm, retryInterval);
-        }
-    }
-
-    findForm();
+    hideCountryDropdown();
+    applyGlobalStyles();
+    monitorDOMChanges();
 });
 </script>
+
 	
 </body>
 </html>
