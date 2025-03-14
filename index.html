@@ -488,53 +488,121 @@ setTimeout(() => {
 
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  // Define the shadow host and part name
-  const shadowHostSelector = '.fs-webform-container .fserv-container .fs-country-phone';
-  const partName = 'fw-select-input-container';
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("🚀 Script Loaded: Starting form detection...");
 
-  // Function to hide the element
-  const hideElement = () => {
-    // Find the shadow host
-    const shadowHost = document.querySelector(shadowHostSelector);
-    if (shadowHost && shadowHost.shadowRoot) {
-      // Access the shadow root
-      const shadowRoot = shadowHost.shadowRoot;
+    const formSelector = "[id^='fs-webform-container_'] form"; // General selector for the form
+    const maxRetries = 20; // Retry up to 20 times
+    const retryInterval = 300; // Retry every 300ms
+    let attempts = 0;
 
-      // Find the element using the part attribute
-      const element = shadowRoot.querySelector(`[part="${partName}"]`);
-      console.log(element);
+    function findForm() {
+        const form = document.querySelector(formSelector);
 
-      if (element) {
-        element.style.display = 'none';
-        console.log('Changes applied');
-      } else {
-        console.log('Element not found in shadow DOM');
-      }
-    } else {
-      console.log('Shadow host or shadow root not found');
+        if (form) {
+            console.log("✅ Form found!", form);
+            addFormId(form);
+            enforceStyles(); // Apply styles
+            applyShadowDomFix(); // Fix inside Shadow DOM
+            monitorStyleChanges(); // Watch for unwanted changes
+        } else if (attempts < maxRetries) {
+            attempts++;
+            console.warn(`⏳ Attempt ${attempts}/${maxRetries}: Form not found, retrying...`);
+            setTimeout(findForm, retryInterval); // Retry
+        } else {
+            console.error("❌ Form not found after multiple attempts. Please check the selector.");
+        }
     }
-  };
 
-  // Initial attempt to hide the element
-  hideElement();
+    function addFormId(form) {
+        if (!form.id) {
+            form.id = "detected-webform";
+            console.log("🆔 Form ID added:", form.id);
+        }
+    }
 
-  // Set up a MutationObserver to monitor changes to the DOM
-  const observer = new MutationObserver((mutationsList) => {
-    mutationsList.forEach((mutation) => {
-      if (mutation.type === 'childList' || mutation.type === 'attributes') {
-        // Re-hide the element if it reappears or is modified
-        hideElement();
-      }
-    });
-  });
+    function enforceStyles() {
+        let styleTag = document.getElementById("enforce-custom-style");
 
-  // Start observing the document body for changes
-  observer.observe(document.body, {
-    childList: true, // Observe additions/removals of child elements
-    subtree: true, // Observe all descendants
-    attributes: true, // Observe attribute changes
-  });
+        if (!styleTag) {
+            styleTag = document.createElement("style");
+            styleTag.id = "enforce-custom-style";
+            document.head.appendChild(styleTag);
+        }
+
+        styleTag.textContent = `
+            .fs-country-phone::part(fw-select-input-container) {
+                display: none !important;
+            }
+
+            .fs-webform-container .fserv-container .fserv-label, 
+            .fs-webform-container .fserv-container button {
+                margin-left: 10px !important;
+            }
+
+            .fs-webform-container .fserv-input-text {
+                margin-left: 10px !important;
+            }
+
+            .fs-webform-container .fserv-container .fserv-field .select2-container .select2-selection--single, 
+            .fs-webform-container .fserv-container .select2-selection {
+                margin-left: 10px !important;
+            }
+
+            .fs-webform-container .fserv-container .fserv-input-checkbox {
+                margin-left: 10px !important;
+            }
+        `;
+
+        console.log("🎨 Custom styles applied & enforced!");
+    }
+
+    function applyShadowDomFix() {
+        const formElement = document.querySelector(".fs-country-phone");
+        if (formElement?.shadowRoot) {
+            const existingStyle = formElement.shadowRoot.querySelector("#hide-country-style");
+            
+            if (!existingStyle) {
+                console.log("🌟 Applying fix inside Shadow DOM...");
+                const style = document.createElement("style");
+                style.id = "hide-country-style";
+                style.textContent = `
+                    ::part(fw-select-input-container) {
+                        display: none !important;
+                    }
+                `;
+                formElement.shadowRoot.appendChild(style);
+                console.log("✅ Shadow DOM Fix Applied!");
+            } else {
+                console.log("🔄 Shadow DOM Fix Already Exists!");
+            }
+        } else {
+            console.warn("⚠️ Shadow DOM not available yet. Retrying...");
+            setTimeout(applyShadowDomFix, 500);
+        }
+    }
+
+    function monitorStyleChanges() {
+        const observer = new MutationObserver(() => {
+            console.warn("⚠️ Styles were modified! Reapplying...");
+            enforceStyles();
+            applyShadowDomFix();
+        });
+
+        observer.observe(document.head, { childList: true, subtree: true });
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        console.log("🔍 Monitoring for style changes...");
+    }
+
+    findForm(); // Start finding the form on page load
+
+    // Extra safeguard: Apply styles again after 2.5 seconds
+    setTimeout(() => {
+        console.log("⏳ Running final style check after delay...");
+        enforceStyles();
+        applyShadowDomFix();
+    }, 2500);
 });
 </script>
 
