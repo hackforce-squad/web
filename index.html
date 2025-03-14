@@ -488,17 +488,31 @@ setTimeout(() => {
 
 
 <script>
-	document.addEventListener('DOMContentLoaded', () => {
-  // Define the target element using its part attribute
-  const targetSelector = '.fs-webform-container .fserv-container .fs-country-phone::part(fw-select-input-container)';
-	console.log(targetSelector);
+document.addEventListener('DOMContentLoaded', () => {
+  // Define the shadow host and part name
+  const shadowHostSelector = '.fs-webform-container .fserv-container .fs-country-phone';
+  const partName = 'fw-select-input-container';
+
   // Function to hide the element
   const hideElement = () => {
-    const element = document.querySelector(targetSelector);
-	  console.log(element);
-    if (element) {
-      element.style.display = 'none';
-	    console.log("Changes applied");
+    // Find the shadow host
+    const shadowHost = document.querySelector(shadowHostSelector);
+    if (shadowHost && shadowHost.shadowRoot) {
+      // Access the shadow root
+      const shadowRoot = shadowHost.shadowRoot;
+
+      // Find the element using the part attribute
+      const element = shadowRoot.querySelector(`[part="${partName}"]`);
+      console.log(element);
+
+      if (element) {
+        element.style.display = 'none';
+        console.log('Changes applied');
+      } else {
+        console.log('Element not found in shadow DOM');
+      }
+    } else {
+      console.log('Shadow host or shadow root not found');
     }
   };
 
