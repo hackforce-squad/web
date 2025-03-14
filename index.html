@@ -487,6 +487,43 @@ setTimeout(() => {
 </script> -->
 
 
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+  // Define the target element using its part attribute
+  const targetSelector = '.fs-webform-container .fserv-container .fs-country-phone::part(fw-select-input-container)';
+	console.log(targetSelector);
+  // Function to hide the element
+  const hideElement = () => {
+    const element = document.querySelector(targetSelector);
+    if (element) {
+      element.style.display = 'none';
+	    console.log("Changes applied");
+    }
+  };
+
+  // Initial attempt to hide the element
+  hideElement();
+
+  // Set up a MutationObserver to monitor changes to the DOM
+  const observer = new MutationObserver((mutationsList) => {
+    mutationsList.forEach((mutation) => {
+      if (mutation.type === 'childList' || mutation.type === 'attributes') {
+        // Re-hide the element if it reappears or is modified
+        hideElement();
+      }
+    });
+  });
+
+  // Start observing the document body for changes
+  observer.observe(document.body, {
+    childList: true, // Observe additions/removals of child elements
+    subtree: true, // Observe all descendants
+    attributes: true, // Observe attribute changes
+  });
+});
+</script>
+
+
 
 	
 </body>
