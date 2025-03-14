@@ -312,9 +312,9 @@ document.addEventListener('DOMContentLoaded', function () {
     			font-size: small !important;
 		    }
 
-/* 		    .fs-country-phone::part(fw-select-input-container) {
+		    .fs-country-phone::part(fw-select-input-container) {
     display: none !important;
-} */
+}
 /* .fs-country-phone::part(country-select-container) {
     margin-inline-end: 0 !important;
 	display: none 
@@ -485,38 +485,6 @@ setTimeout(() => {
 
 
 </script> -->
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    function hideCountryDropdown() {
-        console.log("🔍 Searching for country code dropdown...");
-
-        // Select all elements that may have shadow DOM
-        document.querySelectorAll("*").forEach(el => {
-            if (el.shadowRoot) {
-                const dropdown = el.shadowRoot.querySelector('[part="fw-select-input-container"]');
-                if (dropdown) {
-                    dropdown.style.display = "none";
-                    console.log("✅ Country code dropdown hidden!");
-                }
-            }
-        });
-    }
-
-    function monitorDOMChanges() {
-        const observer = new MutationObserver(() => {
-            console.warn("⚠️ DOM updated! Reapplying fixes...");
-            hideCountryDropdown();
-        });
-
-        observer.observe(document.body, { childList: true, subtree: true });
-        console.log("🔍 Monitoring for DOM changes...");
-    }
-
-    hideCountryDropdown();
-    monitorDOMChanges();
-});
-</script>
 
 
 
