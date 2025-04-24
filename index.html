@@ -134,8 +134,42 @@ console.log(document.getElementById("company_name_2").value);
 	 -->
 <script src='https://tadashicorp-team1.myfreshworks.com/crm/sales/web_forms/b3176724a3c00f771cac82af813ef5c3e7dad2977a4b21b9e48f4e598d83a089/form.js' crossorigin='anonymous' id='fs_b3176724a3c00f771cac82af813ef5c3e7dad2977a4b21b9e48f4e598d83a089'></script>
 	
+<script>
 	
+document.addEventListener("DOMContentLoaded", function () {
+    // Function to get query parameter by name
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    // Function to set a cookie
+    function setCookie(name, value, days) {
+        const date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        const expires = "expires=" + date.toUTCString();
+        document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
+    }
+
+    // Get UTM parameters
+    const utmTerm = getQueryParam("utm_term");
+    const utmContent = getQueryParam("utm_content");
+
+    // Store in localStorage and cookies if they exist
+    if (utmTerm) {
+        localStorage.setItem("utm_term", utmTerm);
+        setCookie("utm_term", utmTerm, 7); // Cookie lasts 7 days
+        console.log("utm_term captured:", utmTerm);
+    }
+
+    if (utmContent) {
+        localStorage.setItem("utm_content", utmContent);
+        setCookie("utm_content", utmContent, 7);
+        console.log("utm_content captured:", utmContent);
+    }
+});
 	
+</script>
 	
 	
 	
@@ -504,7 +538,8 @@ setTimeout(() => {
 
 
 </script> -->
-<script>
+<!-- <script>
+// Searching for the Classic webform on the page with certain number of retries
 document.addEventListener("DOMContentLoaded", function () {
     const formSelector = "[id^='fs-webform-container_'] form";
     const maxRetries = 10;
@@ -524,20 +559,20 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Form not found after multiple attempts.");
         }
     }
-
+// Capture the Email address when the webform is submitted
     function attachConversionTracking(form) {
         form.addEventListener('submit', function (e) {
             const email = form.querySelector("input[type='email']")?.value;
             if (email) {
                 console.log("Captured email:", email);
 
-                // Enhanced Conversions
+                // gtag.js will hash the email address value
                 gtag('set', 'user_data', {
                     email: email
                 });
 
                 gtag('event', 'conversion', {
-                    send_to: 'AW-XXXXXXX/abc123def456' // Replace with your real conversion ID/label
+                    send_to: 'AW-XXXXXXX/abc123def456' // Replace with your real conversion ID/label as per Google support docs
                 });
             } else {
                 console.warn("Email not found in form.");
@@ -547,7 +582,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     findForm();
 });
-</script>
+</script> -->
 	
 </body>
 </html>
