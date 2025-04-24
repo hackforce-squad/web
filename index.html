@@ -504,6 +504,50 @@ setTimeout(() => {
 
 
 </script> -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const formSelector = "[id^='fs-webform-container_'] form";
+    const maxRetries = 10;
+    const retryInterval = 500;
+    let attempts = 0;
+
+    function findForm() {
+        const form = document.querySelector(formSelector);
+
+        if (form) {
+            console.log("Form found");
+            attachConversionTracking(form);
+        } else if (attempts < maxRetries) {
+            attempts++;
+            setTimeout(findForm, retryInterval);
+        } else {
+            console.error("Form not found after multiple attempts.");
+        }
+    }
+
+    function attachConversionTracking(form) {
+        form.addEventListener('submit', function (e) {
+            const email = form.querySelector("input[type='email']")?.value;
+            if (email) {
+                console.log("Captured email:", email);
+
+                // Enhanced Conversions
+                gtag('set', 'user_data', {
+                    email: email
+                });
+
+                gtag('event', 'conversion', {
+                    send_to: 'AW-XXXXXXX/abc123def456' // Replace with your real conversion ID/label
+                });
+            } else {
+                console.warn("Email not found in form.");
+            }
+        });
+    }
+
+    findForm();
+});
+</script>
 	
 </body>
 </html>
