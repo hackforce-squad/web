@@ -134,8 +134,8 @@ console.log(document.getElementById("company_name_2").value);
 	 -->
 <script src='https://tadashicorp-team1.myfreshworks.com/crm/sales/web_forms/b3176724a3c00f771cac82af813ef5c3e7dad2977a4b21b9e48f4e598d83a089/form.js' crossorigin='anonymous' id='fs_b3176724a3c00f771cac82af813ef5c3e7dad2977a4b21b9e48f4e598d83a089'></script>
 	
-<script>
-	
+<!-- <script>
+	// Create a new cookie
 document.addEventListener("DOMContentLoaded", function () {
     // Function to get query parameter by name
     function getQueryParam(param) {
@@ -169,7 +169,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 	
-</script>
+</script> -->
 	
 	
 	
@@ -300,7 +300,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
 <!-- //UTM Parameters in Classic webform -->
 
-<!-- 	<script>
+	<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Function to get query parameter by name
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    // Function to set a cookie
+    function setCookie(name, value, days) {
+        const date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        const expires = "expires=" + date.toUTCString();
+        document.cookie = name + "=" + encodeURIComponent(value) + ";" + expires + ";path=/";
+    }
+
+    // Get UTM parameters
+    const utmTerm = getQueryParam("utm_term");
+    const utmContent = getQueryParam("utm_content");
+
+    // Store in localStorage and cookies if they exist
+    if (utmTerm) {
+        localStorage.setItem("utm_term", utmTerm);
+        setCookie("utm_term", utmTerm, 7); // Cookie lasts 7 days
+        console.log("utm_term captured:", utmTerm);
+    }
+
+    if (utmContent) {
+        localStorage.setItem("utm_content", utmContent);
+        setCookie("utm_content", utmContent, 7);
+        console.log("utm_content captured:", utmContent);
+    }
+});
+		
   var WebFormEvent = {
     beforeSubmit: function () {
       // Define mapping of localStorage keys to form field names
@@ -334,7 +368,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   };
 
-	</script>-->
+	</script>
 
 	    <style>
  .fs-webform-container .fserv-container button[type=submit].fserv-button-submit {
